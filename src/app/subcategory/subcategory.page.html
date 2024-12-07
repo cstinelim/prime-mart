@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar [class]="bgColorHeader">
+    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-title [class]="headerTitle">{{ allCategories.name }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-icon name="cart" [class]="iconPositionHeader"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label [class]="labelPositionHeader">
+                ₱{{ totalPrice | number:'1.2-2' }}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let subcategory of subcategories" size="6">
+        <ion-card (click)="view(subcategory)" [class]="cardStyle">
+          <ion-card-header [class]="cardHeaderStyle">
+            <ion-img
+              [src]="subcategory.image"
+              alt="{{ subcategory.name }}"
+              [class]="cardImageStyle"
+            ></ion-img
+          ></ion-card-header>
+          <ion-card-content [class]="cardContentStyle">
+            <ion-label [class]="cardLabelStyle">
+              {{ subcategory.name }}
+            </ion-label>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,27 +1,90 @@
-#container {
-  text-align: center;
+ion-content {
+  --background: #fed63f;
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
+  #header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
+    h1 {
+      font-weight: 600;
+      font-size: 35px;
+      color: #017fff;
+      margin-top: 10%;
+      margin-bottom: 150px;
+      font-family: "CustomFont";
+      text-shadow: 3px 4px 0px white, -1px -1px 0px white, 2px 2px 0px white,
+        -1px 1px 0px white;
+    }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+    img {
+      margin-top: 90px;
+      width: 70%;
+      height: 80%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      position: relative;
+      border-radius: 0 0 20px 20px;
+    }
+  }
+  #form {
+    margin-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 
-  color: #8c8c8c;
+  #signup-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 200px;
+    height: 48px;
+  }
 
-  margin: 0;
-}
+  #signup-button ion-button {
+    --background: #ffffff;
+    --color: #000;
+    --box-shadow: 1px 8px 8px 0px rgba(0, 0, 0, 0.05);
+    font-size: 18px;
+    text-transform: initial;
+    border-radius: 50px;
+    width: 300px;
+    box-shadow: 1px 8px 8px 0px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.3s ease;
+  }
 
-#container a {
-  text-decoration: none;
+  #signup-button ion-button:hover {
+    --background: #464242;
+  }
+
+  p {
+    font-size: 18px;
+    color: #ffffff;
+    text-align: center;
+
+    a {
+      color: #987500;
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        color: #6d6c6a;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @font-face {
+    font-family: "CustomFont";
+    src: url("../font/font1.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
 }

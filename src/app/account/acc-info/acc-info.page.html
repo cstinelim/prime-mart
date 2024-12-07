@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" routerLink="/account">
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Account Information</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Account Information Section -->
+  <ion-card class="account-card">
+    <ion-card-content>
+      <ion-list>
+        <!-- Username -->
+        <ion-item>
+          <ion-icon name="person-circle" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Username</h3>
+            <!-- Show paragraph when not editing, show input when editing -->
+            <p *ngIf="!isEditing.username">{{ username }}</p>
+            <ion-input
+              *ngIf="isEditing.username"
+              [(ngModel)]="username"
+              placeholder="Enter Username"
+            ></ion-input>
+          </ion-label>
+          <ion-button slot="end" (click)="toggleEdit('username')">
+            {{ isEditing.username ? 'Save' : 'Edit' }}
+          </ion-button>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item>
+          <ion-icon name="mail" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Email</h3>
+            <!-- Show paragraph when not editing, show input when editing -->
+            <p *ngIf="!isEditing.email">{{ email }}</p>
+            <ion-input
+              *ngIf="isEditing.email"
+              [(ngModel)]="email"
+              placeholder="Enter Email"
+            ></ion-input>
+          </ion-label>
+          <ion-button slot="end" (click)="toggleEdit('email')">
+            {{ isEditing.email ? 'Save' : 'Edit' }}
+          </ion-button>
+        </ion-item>
+
+        <!-- Phone -->
+        <ion-item>
+          <ion-icon name="call" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Phone</h3>
+            <!-- Show paragraph when not editing, show input when editing -->
+            <p *ngIf="!isEditing.phone">{{ phone }}</p>
+            <ion-input
+              *ngIf="isEditing.phone"
+              [(ngModel)]="phone"
+              placeholder="Enter Phone Number"
+            ></ion-input>
+          </ion-label>
+          <ion-button slot="end" (click)="toggleEdit('phone')">
+            {{ isEditing.phone ? 'Save' : 'Edit' }}
+          </ion-button>
+        </ion-item>
+
+        <!-- Password -->
+        <ion-item>
+          <ion-icon name="key" slot="start"></ion-icon>
+          <ion-label>
+            <h3>Password</h3>
+            <!-- Show paragraph when not editing, show input when editing -->
+            <p *ngIf="!isEditing.password">********</p>
+            <ion-input
+              *ngIf="isEditing.password"
+              [(ngModel)]="password"
+              [type]="passwordVisible ? 'text' : 'password'"
+              placeholder="Enter Password"
+            ></ion-input>
+          </ion-label>
+          <ion-button slot="end" (click)="toggleEdit('password')">
+            {{ isEditing.password ? 'Save' : 'Change' }}
+          </ion-button>
+          <ion-icon
+            *ngIf="isEditing.password"
+            name="{{ passwordVisible ? 'eye-off' : 'eye' }}"
+            (click)="togglePasswordVisibility()"
+            style="cursor: pointer; margin-left: 8px"
+          ></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

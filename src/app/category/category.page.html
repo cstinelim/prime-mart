@@ -1,0 +1,115 @@
+<ion-header [translucent]="true">
+  <ion-toolbar [class]="bgColorHeader">
+    <ion-searchbar
+      placeholder="Search for items..."
+      (ionInput)="onSearchChange($event)"
+      debounce="500"
+      [class]="searchbarStyle"
+    ></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/cart">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-icon name="cart" [class]="iconPositionHeader"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-label [class]="labelPositionHeader">
+                ₱{{ totalPrice | number:'1.2-2' }}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngIf="!searchTerm.trim()">
+      <ion-col>
+        <h1>Category</h1>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="!searchTerm.trim()">
+      <ion-col *ngFor="let category of categories" size="6">
+        <ion-card (click)="view(category)" [class]="cardStyle">
+          <ion-card-header [class]="cardHeaderStyle">
+            <ion-img
+              [src]="category.image"
+              alt="{{ category.name }}"
+              [class]="cardImageStyle"
+            ></ion-img
+          ></ion-card-header>
+          <ion-card-content [class]="cardContentStyle">
+            <ion-label [class]="cardLabelStyle">{{ category.name }}</ion-label>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="filteredProducts.length > 0">
+      <ion-col *ngFor="let product of filteredProducts" size="12">
+        <ion-card [class]="productCardStyle">
+          <ion-card-content [class]="productCartContentStyle">
+            <ion-grid
+              ><ion-row>
+                <ion-col size="5" [class]="productCartImageStyle">
+                  <ion-img
+                    [src]="product.image"
+                    [class]="cardImageStyle"
+                  ></ion-img>
+                </ion-col>
+                <ion-col size="7" [class]="productDetailsStyle">
+                  <ion-label [class]="productCartNameStyle">
+                    {{ product.name }}
+                  </ion-label>
+                  <ion-label [class]="productPriceStyle">
+                    ₱{{ product.price }}
+                  </ion-label>
+                  <ion-label [class]="productQuantityStyle">
+                    Quantity
+                  </ion-label>
+                  <ion-row [class]="quantityContainerStyle">
+                    <ion-col size="auto" [class]="quantityButtonStyle">
+                      <ion-button (click)="decreaseQuantity(product)">
+                        -
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size="auto" class="quantityLabelStyle">
+                      <ion-label>{{ product.quantity }}</ion-label>
+                    </ion-col>
+                    <ion-col size="auto" class="quantityButtonStyle">
+                      <ion-button (click)="increaseQuantity(product)">
+                        +
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                  <ion-button
+                    (click)="addToCart(product)"
+                    class="addToCartButtonStyle"
+                  >
+                    <ion-icon name="add"></ion-icon>
+                    Add to Cart
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="filteredProducts.length === 0 && searchTerm.trim() !== ''">
+      <ion-col>
+        <ion-text color="medium">
+          <h3>No results found for "{{ searchTerm }}"</h3>
+        </ion-text>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
