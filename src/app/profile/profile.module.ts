@@ -15,8 +15,8 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    RouterModule
+    RouterModule,
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
 })
 export class ProfilePageModule {}

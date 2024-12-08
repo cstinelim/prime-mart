@@ -7,7 +7,8 @@ const routes: Routes = [
   {
     path: '',
     component: AccountPage
-  },  {
+  },
+  {
     path: 'acc-info',
     loadChildren: () => import('./acc-info/acc-info.module').then( m => m.AccInfoPageModule)
   },
@@ -18,7 +19,8 @@ const routes: Routes = [
   {
     path: 'payment-method',
     loadChildren: () => import('./payment-method/payment-method.module').then( m => m.PaymentMethodPageModule)
-  }
+  },
+
 
 ];
 

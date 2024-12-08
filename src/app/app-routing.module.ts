@@ -54,6 +54,11 @@ const routes: Routes = [
       import('./referral/referral.module').then((m) => m.ReferralPageModule),
   },
   {
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.module').then((m) => m.AccountPageModule),
+  },
+  {
     path: 'help-support',
     loadChildren: () =>
       import('./help-support/help-support.module').then(

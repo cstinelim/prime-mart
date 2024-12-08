@@ -11,25 +11,32 @@ import {
 export class SqliteService {
   private sqlite: SQLiteConnection = new SQLiteConnection(CapacitorSQLite);
   private database!: SQLiteDBConnection;
-  private isDbInitialized = false;
 
   // Initialize or get the database connection
   async initDb() {
     try {
-      if (this.isDbInitialized) {
-        console.log('Database already initialized.');
-        return; // Don't initialize again
+      // Check if a connection already exists
+      if (!this.database) {
+        console.log('No database connection found, creating a new one...');
+        // Create a new connection if it doesn't exist
+        this.database = await this.sqlite.createConnection(
+          'usersDB',
+          false,
+          'no-encryption',
+          1,
+          false
+        );
+        await this.database.open(); // Open the database connection
+        console.log('Database connection opened.');
+      } else {
+        console.log('Reusing existing database connection...');
+        // If already initialized, just open the connection
+        await this.database.open();
+        console.log('Database connection already open.');
       }
-  
-      console.log('Initializing database...');
-      // Create a new database connection (only if it's not already initialized)
-      this.database = await this.sqlite.createConnection('usersDB', false, 'no-encryption', 1, false);
-      await this.database.open(); // Open the database connection
-      this.isDbInitialized = true; // Mark the DB as initialized
-      console.log('Database initialized and open.');
-  
-      // Initialize the table if it doesn't exist
-      await this.initTable();
+
+      await this.initTable(); // Initialize the table if it doesn't exist
+      console.log('Database and table initialized.');
     } catch (error) {
       console.error('Error initializing or opening database:', error);
     }
@@ -56,7 +63,7 @@ export class SqliteService {
   // Check if the database is open
   async isDatabaseOpen() {
     try {
-      return this.database && await this.database.isDBOpen();
+      return this.database && (await this.database.isDBOpen());
     } catch (error) {
       console.error('Error checking database open status:', error);
       return false;
@@ -65,15 +72,23 @@ export class SqliteService {
 
   // Create a new user
   async create(username: string, email: string, password: string) {
-    if (!(await this.isDatabaseOpen())) {
-      console.error('Database is not open');
-      return;
-    }
-
-    const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     try {
+      // Ensure the database is initialized
+      if (!this.database) {
+        console.log('Database not initialized. Initializing...');
+        await this.initDb(); // Ensure the database is initialized
+      }
+
+      // Check if the database is open before performing the operation
+      if (!(await this.isDatabaseOpen())) {
+        console.log('Opening database...');
+        await this.database.open(); // Open the database connection if it's closed
+      }
+
+      // Insert the user into the database
+      const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
       await this.database.run(query, [username, email, password]);
-      console.log('User created successfully');
+      console.log('User added successfully.');
     } catch (error) {
       console.error('Error creating user:', error);
     }
@@ -95,6 +110,4 @@ export class SqliteService {
       return [];
     }
   }
-
-  constructor() {}
 }
