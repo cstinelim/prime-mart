@@ -45,6 +45,10 @@ export class SqliteService {
   // Create the users table if it doesn't exist
   async initTable() {
     try {
+      if (!this.database) {
+        throw new Error('Database connection is not initialized.');
+      }
+
       const query = `
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
