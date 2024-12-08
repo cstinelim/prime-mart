@@ -16,9 +16,8 @@ export class LoginPage implements OnInit {
   constructor(private database: SqliteService, private router: Router) {}
 
   async ngOnInit() {
-    // Initialize database and table before using it
+    // Initialize database before using it
     await this.database.initDb();
-    await this.database.initTable();
   }
 
   togglePasswordVisibility() {
@@ -38,9 +37,7 @@ export class LoginPage implements OnInit {
       const users = await this.database.read();
 
       // Check if a user exists with the provided email and password
-      const user = users.find(
-        (u: any) => u.email === this.email && u.password === this.password
-      );
+      const user = users.find((u: any) => u.email === this.email && u.password === this.password);
 
       if (user) {
         alert('Login successful!');

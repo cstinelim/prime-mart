@@ -20,16 +20,19 @@ export class SqliteService {
         console.log('Database already initialized.');
         return; // Don't initialize again
       }
-  
+
       console.log('Initializing database...');
-      // Create a new database connection (only if it's not already initialized)
       this.database = await this.sqlite.createConnection('usersDB', false, 'no-encryption', 1, false);
-      await this.database.open(); // Open the database connection
-      this.isDbInitialized = true; // Mark the DB as initialized
-      console.log('Database initialized and open.');
-  
-      // Initialize the table if it doesn't exist
-      await this.initTable();
+      if (!this.database) {
+        throw new Error('Failed to create database connection.');
+      }
+
+      await this.database.open();
+      console.log('Database connection opened.');
+      this.isDbInitialized = true;
+
+      // Now that the database is open, initialize the table
+      await this.initTable(); // Initialize the table only after the database is open
     } catch (error) {
       console.error('Error initializing or opening database:', error);
     }
@@ -38,6 +41,10 @@ export class SqliteService {
   // Create the users table if it doesn't exist
   async initTable() {
     try {
+      if (!this.database) {
+        throw new Error('Database connection is not initialized.');
+      }
+
       const query = `
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,8 +79,8 @@ export class SqliteService {
 
     const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
     try {
-      await this.database.run(query, [username, email, password]);
-      console.log('User created successfully');
+      const result = await this.database.run(query, [username, email, password]);
+      console.log('User created successfully:', result.changes?.changes);
     } catch (error) {
       console.error('Error creating user:', error);
     }
