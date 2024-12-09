@@ -16,7 +16,6 @@ export class LoginPage implements OnInit {
   constructor(private database: SqliteService, private router: Router) {}
 
   async ngOnInit() {
-    // Initialize database before using it
     await this.database.initDb();
   }
 
@@ -26,22 +25,20 @@ export class LoginPage implements OnInit {
 
   async login() {
     this.loginError = '';
-
     if (!this.email || !this.password) {
       this.loginError = 'Email and password are required.';
       return;
     }
 
     try {
-      // Get all users from the database
       const users = await this.database.read();
-
-      // Check if a user exists with the provided email and password
-      const user = users.find((u: any) => u.email === this.email && u.password === this.password);
+      const user = users.find(
+        (u: any) => u.email === this.email && u.password === this.password
+      );
 
       if (user) {
         alert('Login successful!');
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/tabs/category']);
       } else {
         this.loginError = 'Invalid email or password.';
       }

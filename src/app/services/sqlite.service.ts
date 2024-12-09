@@ -1,119 +1,76 @@
 import { Injectable } from '@angular/core';
+import { CapacitorSQLite } from '@capacitor-community/sqlite';
 import {
-  CapacitorSQLite,
   SQLiteConnection,
   SQLiteDBConnection,
-} from '@capacitor-community/sqlite';
+} from '@capacitor-community/sqlite/dist/esm';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SqliteService {
-  private sqlite: SQLiteConnection = new SQLiteConnection(CapacitorSQLite);
-  private database!: SQLiteDBConnection;
+  private sqliteConnection: SQLiteConnection;
+  private db!: SQLiteDBConnection; // Non-null assertion operator
 
-  // Initialize or get the database connection
+  constructor() {
+    this.sqliteConnection = new SQLiteConnection(CapacitorSQLite);
+  }
+
   async initDb() {
     try {
-      // Check if a connection already exists
-      if (!this.database) {
-        console.log('No database connection found, creating a new one...');
-        // Create a new connection if it doesn't exist
-        this.database = await this.sqlite.createConnection(
-          'usersDB',
-          false,
-          'no-encryption',
-          1,
-          false
-        );
-        await this.database.open(); // Open the database connection
-        console.log('Database connection opened.');
-      } else {
-        console.log('Reusing existing database connection...');
-        // If already initialized, just open the connection
-        await this.database.open();
-        console.log('Database connection already open.');
-      }
+      // Create connection
+      const dbName = 'userDB';
+      this.db = await this.sqliteConnection.createConnection(
+        dbName,
+        false,
+        'no-encryption',
+        1,
+        false
+      );
 
-      await this.initTable(); // Initialize the table if it doesn't exist
-      console.log('Database and table initialized.');
-    } catch (error) {
-      console.error('Error initializing or opening database:', error);
-    }
-  }
+      // Open database
+      await this.db.open();
 
-  // Create the users table if it doesn't exist
-  async initTable() {
-    try {
-      if (!this.database) {
-        throw new Error('Database connection is not initialized.');
-      }
-
-      const query = `
+      // Create users table
+      const createTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          username TEXT UNIQUE NOT NULL,
-          email TEXT NOT NULL,
+          username TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
           password TEXT NOT NULL
-        )`;
-
-      await this.database.execute(query);
-      console.log('Table initialized or already exists.');
+        );
+      `;
+      await this.db.execute(createTableQuery);
     } catch (error) {
-      console.error('Error creating table:', error);
+      console.error('Error initializing database:', error);
+      throw error;
     }
   }
 
-  // Check if the database is open
-  async isDatabaseOpen() {
-    try {
-      return this.database && (await this.database.isDBOpen());
-    } catch (error) {
-      console.error('Error checking database open status:', error);
-      return false;
+  async insert(user: { username: string; email: string; password: string }) {
+    if (!this.db) {
+      throw new Error('Database not initialized.');
+    }
+
+    const query =
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    const result = await this.db.run(query, [
+      user.username,
+      user.email,
+      user.password,
+    ]);
+    if (result.changes?.changes !== 1) {
+      throw new Error('Failed to insert user.');
     }
   }
 
-  // Create a new user
-  async create(username: string, email: string, password: string) {
-    try {
-      // Ensure the database is initialized
-      if (!this.database) {
-        console.log('Database not initialized. Initializing...');
-        await this.initDb(); // Ensure the database is initialized
-      }
-
-      // Check if the database is open before performing the operation
-      if (!(await this.isDatabaseOpen())) {
-        console.log('Opening database...');
-        await this.database.open(); // Open the database connection if it's closed
-      }
-
-      // Insert the user into the database
-      const query = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
-      await this.database.run(query, [username, email, password]);
-      console.log('User added successfully.');
-    } catch (error) {
-      console.error('Error creating user:', error);
-    }
-  }
-
-  // Read all users from the database
   async read() {
-    if (!(await this.isDatabaseOpen())) {
-      console.error('Database is not open');
-      return [];
+    if (!this.db) {
+      throw new Error('Database not initialized.');
     }
 
-    const query = `SELECT * FROM users`;
-    try {
-      const result = await this.database.query(query);
-      return result.values || [];
-    } catch (error) {
-      console.error('Error reading users:', error);
-      return [];
-    }
+    const query = 'SELECT * FROM users';
+    const result = await this.db.query(query);
+    return result.values || [];
   }
-
-  
 }
