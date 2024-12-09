@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // Import Router
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-order-details',
@@ -7,13 +8,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./order-details.page.scss'],
 })
 export class OrderDetailsPage implements OnInit {
-  order: any = null; // Initialize as null to handle loading state
-  orderId: string = ''; // Store the ID to log it or handle debugging
+  order: any = null;
+  orderId: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router, // Inject Router
+    private cartService: CartService
+  ) {}
 
   ngOnInit() {
-    // Retrieve the 'id' from the route parameters
     const orderId = this.route.snapshot.paramMap.get('id');
 
     if (orderId) {
@@ -25,42 +29,26 @@ export class OrderDetailsPage implements OnInit {
   }
 
   fetchOrderDetails(orderId: string): void {
-    // Simulate fetching the order details based on the ID
-    // (Replace with real API call or service call)
-    if (orderId === 'BSITC1') {
-      this.order = {
-        id: orderId,
-        items: ['Apples', 'Bananas', 'Oranges'],
-        status: 'Shipped',
-        date: '2024-12-06',
-        totalPrice: '₱205',
-        deliveryDate: '2024-12-07',
-      };
-    } else if (orderId === 'BSITC2') {
-      this.order = {
-        id: orderId,
-        items: ['Tomatoes', 'Cucumbers'],
-        status: 'Delivered',
-        date: '2024-12-05',
-        totalPrice: '₱120',
-        deliveryDate: '2024-12-06',
-      };
-    } else if (orderId === 'BSITC3') {
-      this.order = {
-        id: orderId,
-        items: ['Milk', 'Bread'],
-        status: 'Pending',
-        date: '2024-12-04',
-        totalPrice: '₱150',
-        deliveryDate: '2024-12-08',
-      };
+    const orders = this.cartService.getOrders();
+
+    if (orders && orders.length > 0) {
+      const foundOrder = orders.find((order) => order.id === orderId);
+
+      if (foundOrder) {
+        this.order = foundOrder;
+      } else {
+        console.error('Order not found!');
+      }
     } else {
-      console.error('Order not found!');
+      console.error('No orders available!');
     }
   }
 
   cancelOrder(): void {
-    console.log(`Order ${this.order.id} has been cancelled.`);
-    // Implement cancellation logic (API call, etc.)
+    if (this.order) {
+      this.cartService.removeOrder(this.order.id); // Call removeOrder from CartService
+      console.log(`Order ${this.order.id} has been cancelled.`);
+      this.router.navigate(['/orders']); // Navigate back to orders page
+    }
   }
 }

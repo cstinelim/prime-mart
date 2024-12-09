@@ -20,7 +20,7 @@
     <ion-card-content>
       <h3>Items:</h3>
       <ul>
-        <li *ngFor="let item of order.items">- {{ item }}</li>
+        <li *ngFor="let item of order.items">- {{ item.name }}</li>
       </ul>
       <br />
       <p><strong>Total Price: </strong>{{ order.totalPrice }}</p>

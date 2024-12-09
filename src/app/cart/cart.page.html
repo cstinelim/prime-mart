@@ -1,6 +1,10 @@
 <ion-header>
   <ion-toolbar [class]="bgColorHeader">
-    <ion-buttons slot="start"><ion-back-button></ion-back-button></ion-buttons>
+    <ion-buttons slot="start" routerLink="/profile">
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title [class]="headerTitle">Shopping Cart</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="toggleEditMode()">
@@ -67,7 +71,8 @@
   <ion-toolbar>
     <ion-title>Total: ₱{{ totalPrice | number: '1.2-2' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button> Check Out </ion-button>
+      <ion-button color="primary" (click)="checkOut()">Check Out</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+

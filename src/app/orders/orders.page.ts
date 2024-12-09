@@ -1,44 +1,27 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
-interface Order {
-  id: string;
-  items: string[];
-  status: string;
-  date: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'; // Import Router
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-orders',
   templateUrl: 'orders.page.html',
   styleUrls: ['orders.page.scss'],
 })
-export class OrdersPage {
-  orders: Order[] = [
-    {
-      id: 'BSITC1',
-      items: ['Apples', 'Bananas', 'Oranges'],
-      status: 'Shipped',
-      date: '2024-12-06',
-    },
-    {
-      id: 'BSITC2',
-      items: ['Tomatoes', 'Cucumbers'],
-      status: 'Delivered',
-      date: '2024-12-05',
-    },
-    {
-      id: 'BSITC3',
-      items: ['Milk', 'Bread'],
-      status: 'Pending',
-      date: '2024-12-04',
-    },
-  ];
+export class OrdersPage implements OnInit {
+  orders: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private cartService: CartService, private router: Router) {} // Inject Router
 
-  viewOrderDetails(order: Order): void {
-    // Navigate to order details page and pass the order ID
-    this.router.navigate(['/order-details', order.id]);
+  ngOnInit() {
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.orders = this.cartService.getOrders();
+  }
+
+  viewOrderDetails(order: any) {
+    console.log('View details for order:', order);
+    this.router.navigate(['/order-details', order.id]); // Navigate to OrderDetailsPage
   }
 }

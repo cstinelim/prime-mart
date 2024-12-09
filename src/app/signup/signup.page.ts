@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SqliteService } from '../services/sqlite.service';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-signup',
@@ -18,7 +19,11 @@ export class SignupPage implements OnInit {
   showPassword = false;
   showPassword2 = false;
 
-  constructor(private database: SqliteService, private router: Router) {}
+  constructor(
+    private database: SqliteService,
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   async ngOnInit() {
     console.log('Initializing database and table...');
@@ -59,7 +64,6 @@ export class SignupPage implements OnInit {
     }
 
     try {
-      // Check if the username or email already exists
       const users = await this.database.read();
       const userExists = users.find(
         (u: any) => u.username === this.username || u.email === this.email
@@ -70,16 +74,16 @@ export class SignupPage implements OnInit {
         return;
       }
 
-      // Add new user to the database
       await this.database.create(this.username, this.email, this.password);
       alert('User added successfully.');
 
-      // Reset the form
+      // Store the username in the UserService
+      this.userService.setUsername(this.username);
+
       this.username = '';
       this.email = '';
       this.password = '';
 
-      // Redirect to profile page
       this.router.navigate(['/tabs/category']);
     } catch (error) {
       console.error('Error adding user:', error);
