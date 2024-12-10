@@ -29,6 +29,7 @@
   --inner-padding-end: 16px;
   margin-top: 10px;
   border-bottom: 1px solid #ddd;
+  --background: #ffffff;
 }
 
 .help-card ion-item:hover {
@@ -64,6 +65,7 @@
   --inner-padding-end: 16px;
   margin-top: 15px;
   border-bottom: 1px solid #ddd;
+    --background: #ffffff;
 }
 
 .contact-card ion-item:hover {
@@ -92,6 +94,7 @@
   --inner-padding-end: 16px;
   margin-top: 10px;
   border-bottom: 1px solid #ddd;
+    --background: #ffffff;
 }
 
 .troubleshoot-card ion-item:hover {
@@ -111,3 +114,4 @@ ion-buttons ion-button {
 ion-buttons ion-button:hover {
   --color: #fed63f;
 }
+

@@ -35,7 +35,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row *ngIf="!searchTerm.trim()">
+    <ion-row *ngIf="!searchTerm.trim()" >
       <ion-col *ngFor="let category of categories" size="6">
         <ion-card (click)="view(category)" [class]="cardStyle">
           <ion-card-header [class]="cardHeaderStyle">

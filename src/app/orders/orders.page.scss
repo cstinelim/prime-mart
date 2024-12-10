@@ -3,7 +3,10 @@ ion-card {
   margin-top: 20px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  background: #fff;
+}
+
+.card-color {
+  --background: #c80000;
 }
 
 ion-item {

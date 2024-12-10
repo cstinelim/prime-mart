@@ -94,13 +94,17 @@ ion-icon {
 
 ion-label {
   font-size: 16px;
-  color: #000;
+  color: #000000;
   margin-left: 16px;
+}
+
+.label-color {
+  color: rgb(0, 0, 0)
 }
 
 ion-item[button]:hover {
   --background: #fed63f; /* Light background color on hover */
-  --color: #ffffff; /* Change text color to blue on hover */
+  --color: #ffffff; 
   transform: scale(1.03); /* Slightly scale up the item */
 }
 
@@ -128,3 +132,4 @@ ion-button:hover {
 ion-title {
   margin-left: 50px;
 }
+
