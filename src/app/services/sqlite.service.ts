@@ -10,7 +10,7 @@ import {
 })
 export class SqliteService {
   private sqliteConnection: SQLiteConnection;
-  private db!: SQLiteDBConnection; // Non-null assertion operator
+  private db!: SQLiteDBConnection; 
 
   constructor() {
     this.sqliteConnection = new SQLiteConnection(CapacitorSQLite);
